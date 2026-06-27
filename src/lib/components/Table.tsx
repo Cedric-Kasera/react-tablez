@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import type { Column, TableProps, SortOrder } from '../types';
 import { getNestedValue, defaultCompare, matchesQuery } from '../utils';
 
+const EMPTY_FILTERS: Record<string, string> = {};
+
 export function Table<T>({
   data,
   columns,
@@ -36,10 +38,15 @@ export function Table<T>({
   // Dropdown states for actions menu (if layout is 'dropdown')
   const [openDropdownRowIndex, setOpenDropdownRowIndex] = useState<number | null>(null);
 
-  // Sync internal states when data resets or initial values change
-  useEffect(() => {
+  // Track previous data length and page size to reset page when they change
+  const [prevDataLength, setPrevDataLength] = useState(data.length);
+  const [prevPageSize, setPrevPageSize] = useState(internalPageSize);
+
+  if (data.length !== prevDataLength || internalPageSize !== prevPageSize) {
+    setPrevDataLength(data.length);
+    setPrevPageSize(internalPageSize);
     setInternalPage(1);
-  }, [data.length, internalPageSize]);
+  }
 
   // Close dropdown on window click
   useEffect(() => {
@@ -60,7 +67,7 @@ export function Table<T>({
   const sortBy = isSortingControlled ? controlledSorting.sortBy : internalSortBy;
   const sortOrder = isSortingControlled ? controlledSorting.sortOrder : internalSortOrder;
   const globalFilterValue = isFilteringControlled ? (controlledFiltering.globalFilter || '') : internalGlobalFilter;
-  const columnFilterValues = isFilteringControlled ? (controlledFiltering.columnFilters || {}) : internalColumnFilters;
+  const columnFilterValues = isFilteringControlled ? (controlledFiltering.columnFilters || EMPTY_FILTERS) : internalColumnFilters;
 
   // --- Handlers ---
   const handlePageChange = (page: number) => {
@@ -134,7 +141,7 @@ export function Table<T>({
 
     // 1. Column Filtering
     if (!isFilteringControlled) {
-      const activeColFilters = Object.entries(columnFilterValues).filter(([_, val]) => !!val);
+      const activeColFilters = Object.entries(columnFilterValues).filter(([, val]) => !!val);
       if (activeColFilters.length > 0) {
         result = result.filter(row => {
           return activeColFilters.every(([key, filterVal]) => {

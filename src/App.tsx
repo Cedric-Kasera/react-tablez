@@ -416,7 +416,7 @@ function App() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'install' | 'usage' | 'api' | 'controlled' | 'styling')}
                 className={`
                   text-left px-4 py-2 text-sm font-semibold transition-all -ml-px border-l-2
                   ${activeTab === tab.id 

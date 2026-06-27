@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Retrieves a nested value from an object given a dot-notation path.
  * E.g., getNestedValue({ user: { name: 'Alice' } }, 'user.name') returns 'Alice'
