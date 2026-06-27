@@ -307,4 +307,4 @@ Inside the project directory, you can run the following:
 
 ## 📄 License
 
-MIT © Nemo
+Dedicated to the public domain under the [Unlicense](file:///home/nemo/Desktop/Table_Package/LICENSE). Feel free to use, copy, modify, or distribute.

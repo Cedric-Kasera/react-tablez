@@ -1,6 +1,7 @@
 {
   "name": "@ohryzon/react-tablez",
   "version": "1.0.4",
+  "license": "Unlicense",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
