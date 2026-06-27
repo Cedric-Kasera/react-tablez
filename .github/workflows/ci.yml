@@ -1,0 +1,44 @@
+name: React Tablify CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate-and-test:
+    name: Validate, Test, and Build Check
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment (v${{ matrix.node-version }})
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Project Dependencies
+        run: npm ci
+
+      - name: Security Check (Audit Vulnerabilities)
+        run: npm audit --audit-level=high
+
+      - name: Code Quality Linting
+        run: npm run lint
+
+      - name: Execute Vitest Component Unit Tests
+        run: npm run test
+
+      - name: Verify Library Compilation Build
+        run: npm run build:lib
+
+      - name: Verify Demo Application Compilation Build
+        run: npm run build
